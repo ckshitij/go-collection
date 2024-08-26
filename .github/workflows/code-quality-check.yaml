@@ -1,0 +1,28 @@
+name: code-quality-check
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  # Optional: allow read access to pull request. Use with `only-new-issues` option.
+  # pull-requests: read
+
+jobs:
+  code-quality-check:
+    name: code-quality-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.60
+      - name: execute unit tests
+        run: go test ./...
+      - name: execute vet
+        run: go vet ./...
