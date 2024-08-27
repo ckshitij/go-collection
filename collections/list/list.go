@@ -1,6 +1,7 @@
 package list
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/ckshitij/go-collection/collections/node"
@@ -9,8 +10,12 @@ import (
 type List[T any] struct {
 	head *node.Node[T]
 	tail *node.Node[T]
-	size uint64
+	size uint
 }
+
+var (
+	ErrInvalidPosition = errors.New("invalid position, please check the list size")
+)
 
 // Create a new list with the initializer element
 func NewList[T any]() List[T] {
@@ -22,7 +27,7 @@ func NewList[T any]() List[T] {
 }
 
 // insert element in the beginning of the list
-func (list *List[T]) Insert(element T) {
+func (list *List[T]) Push(element T) {
 	newNode := node.NewNode(element)
 	if list.head != nil {
 		newNode.SetNext(list.head)
@@ -49,17 +54,102 @@ func (list *List[T]) Append(element T) {
 	list.size++
 }
 
+// Remove element from the beginning of the list
+func (list *List[T]) PopFront() {
+	if list.head == nil {
+		return
+	}
+	list.head = list.head.Next()
+	if list.head == nil {
+		list.tail = nil
+	} else {
+		list.head.SetPrevious(nil)
+	}
+	list.size--
+}
+
+// Remove element from the end of the list
+func (list *List[T]) PopBack() {
+	if list.head == nil {
+		return
+	}
+	list.tail = list.tail.Previous()
+	if list.tail == nil {
+		list.head = nil
+	} else {
+		list.tail.SetNext(nil)
+	}
+	list.size--
+}
+
+// Get element from the beginning of the list
+func (list *List[T]) Front() *node.Node[T] {
+	return list.head
+}
+
+// Get element from the back of the list
+func (list *List[T]) Back() *node.Node[T] {
+	return list.tail
+}
+
 // Return the size of list
-func (list *List[T]) Len() uint64 {
+func (list *List[T]) Len() uint {
 	return list.size
 }
 
-func (list *List[T]) Debug() {
-	from := list.head
-	to := list.tail
-	for from != to {
-		fmt.Printf("\n %v \n", from.Element())
-		from = from.Next()
+// InsertAtPosition inserts a node at a specific position in the list
+func (dll *List[T]) InsertAtPosition(data T, position int) error {
+	newNode := node.NewNode(data)
+
+	if position < 0 {
+		return fmt.Errorf("position must be non-negative")
 	}
-	fmt.Printf("\n %v \n", from.Element())
+
+	if position == 0 {
+		dll.Push(data)
+		return nil
+	}
+
+	current := dll.head
+	for i := 0; i < position-1; i++ {
+		if current == nil {
+			return fmt.Errorf("position out of bounds")
+		}
+		current = current.Next()
+	}
+
+	if current == nil || current.Next() == nil {
+		dll.Append(data)
+	} else {
+		newNode.SetNext(current.Next())
+		newNode.SetPrevious(current)
+		current.Next().SetPrevious(newNode)
+		current.SetNext(newNode)
+	}
+	dll.size++
+	return nil
+}
+
+func (list *List[T]) IterateForward() {
+	itr := list.head
+	fmt.Println()
+	i := 1
+	for itr != nil {
+		fmt.Printf(" %d : %v ", i, itr.Element())
+		i++
+		itr = itr.Next()
+	}
+	fmt.Println()
+}
+
+func (list *List[T]) IterateBackward() {
+	itr := list.tail
+	fmt.Println()
+	i := list.size
+	for itr != nil {
+		fmt.Printf(" %d : %v ", i, itr.Element())
+		i--
+		itr = itr.Previous()
+	}
+	fmt.Println()
 }
