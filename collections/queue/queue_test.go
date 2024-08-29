@@ -53,7 +53,8 @@ func TestQueueFront(t *testing.T) {
 	q.Enqueue(40)
 	assert.Equal(t, 30, q.Front()) // Front should remain the same
 
-	q.Dequeue()
+	err := q.Dequeue()
+	assert.NoError(t, err)
 	assert.Equal(t, 40, q.Front()) // Front should update after dequeue
 }
 
@@ -67,6 +68,7 @@ func TestQueueBack(t *testing.T) {
 	q.Enqueue(60)
 	assert.Equal(t, 60, q.Back())
 
-	q.Dequeue()
+	err := q.Dequeue()
+	assert.NoError(t, err)
 	assert.Equal(t, 60, q.Back()) // Back should not change after dequeue
 }
