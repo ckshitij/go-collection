@@ -40,7 +40,7 @@ func TestQueueDequeue(t *testing.T) {
 
 	err = q.Dequeue()
 	assert.Error(t, err)
-	assert.EqualError(t, err, "invalid operation: empty Queue")
+	assert.EqualError(t, err, "invalid operation: empty queue")
 }
 
 func TestQueueFront(t *testing.T) {
