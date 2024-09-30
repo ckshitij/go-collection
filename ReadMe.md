@@ -1,5 +1,7 @@
 ## go-collection
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/ckshitij/go-collection.svg)](https://pkg.go.dev/github.com/ckshitij/go-collection)
+
 **go-collection** is a Go library that provides a comprehensive abstraction layer for common data structures, allowing developers to leverage these structures easily and efficiently. This package is designed to simplify the implementation and use of fundamental data structures like:
 
 - **Doubly Linked-List**: A sequence of elements where each element points to both its previous and next element, enabling efficient traversal in both directions.
